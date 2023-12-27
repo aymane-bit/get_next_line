@@ -67,12 +67,12 @@ void    *ft_calloc(size_t elementCount, size_t elementSize)
         return (res);
 }
 
-size_t  ft_strlen(const char *theString)
+size_t  ft_strlen(const char *s)
 {
         int     i;
 
         i = 0;
-        while (theString[i])
+        while (s[i])
                 i++;
         return (i);
 }

@@ -28,7 +28,7 @@ char    *ft_next(char *buffer)
                 return (NULL);
         }
         // len of file - len of firstline + 1
-        line = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
+        line = calloc((strlen(buffer) - i + 1), sizeof(char));
         i++;
         j = 0;
         // line == buffer
@@ -52,7 +52,7 @@ char    *ft_line(char *buffer)
         while (buffer[i] && buffer[i] != '\n')
                 i++;
         // malloc to eol
-        line = ft_calloc(i + 2, sizeof(char));
+        line = calloc(i + 2, sizeof(char));
         i = 0;
         // line = buffer
         while (buffer[i] && buffer[i] != '\n')
@@ -66,15 +66,15 @@ char    *ft_line(char *buffer)
         return (line);
 }
 
-char    *reader(int fd, char *res)
+char    *read_file(int fd, char *res)
 {
         char    *buffer;
         int             byte_read;
 
 
         if (!res)
-                res = ft_calloc(1, 1);
-        buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+                res = calloc(1, 1);
+        buffer = calloc(BUFFER_SIZE + 1, sizeof(char));
         byte_read = 1;
         while (byte_read > 0)
         {
@@ -86,7 +86,7 @@ char    *reader(int fd, char *res)
                 }
                 buffer[byte_read] = 0;
                 res = join_free(res, buffer);
-                if (ft_strchr(buffer, '\n'))
+                if (strchr(buffer, '\n'))
                         break ;
         }
         free(buffer);
@@ -101,7 +101,7 @@ char    *get_next_line(int fd)
         // error handling
         if (fd < 0 || BUFFER_SIZE <= 0)
                 return (NULL);
-        buffer = reader(fd, buffer);
+        buffer = read_file(fd, buffer);
         if (!buffer)
                 return (NULL);
         line = ft_line(buffer);
@@ -112,8 +112,9 @@ char    *get_next_line(int fd)
 int main()
 {
         int fd = open("test", O_RDONLY);
+
         char *f =  get_next_line(fd);
         printf("%s",f);
-        free(f);
+        // printf("--------------------\n");
         close(fd);
 }
