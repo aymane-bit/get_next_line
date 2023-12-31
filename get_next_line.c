@@ -1,119 +1,108 @@
-# include "get_next_line.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: akajjou <akajjou@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/31 07:04:07 by akajjou           #+#    #+#             */
+/*   Updated: 2023/12/31 07:05:34 by akajjou          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-// join and free
-char    *join_free(char *buffer, char *buf)
+#include "get_next_line.h"
+
+char	*join_free(char *buffer, char *buf)
 {
-        char    *temp;
+	char	*temp;
 
-        temp = ft_strjoin(buffer, buf);
-        free(buffer);
-        return (temp);
+	temp = ft_strjoin(buffer, buf);
+	free(buffer);
+	return (temp);
 }
 
-// delete line find
-char    *ft_next(char *buffer)
+char	*get_ready(char *buffer)
 {
-        int             i;
-        int             j;
-        char    *line;
+	int		i;
+	int		j;
+	char	*ret_buffer;
 
-        i = 0;
-        // find len of first line
-        while (buffer[i] && buffer[i] != '\n')
-                i++;
-        // if eol == \0 return NULL
-        if (!buffer[i])
-        {
-                free(buffer);
-                return (NULL);
-        }
-        // len of file - len of firstline + 1
-        line = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
-        i++;
-        j = 0;
-        // line == buffer
-        while (buffer[i])
-                line[j++] = buffer[i++];
-        free(buffer);
-        return (line);
+	i = 0;
+	while (buffer[i] && buffer[i] != '\n')
+		i++;
+	if (!buffer[i])
+	{
+		free(buffer);
+		return (NULL);
+	}
+	ret_buffer = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
+	i++;
+	j = 0;
+	while (buffer[i])
+		ret_buffer[j++] = buffer[i++];
+	free(buffer);
+	return (ret_buffer);
 }
 
-// take line for return
-char    *ft_line(char *buffer)
+char	*clean_ret(char *buffer)
 {
-        char    *line;
-        int             i;
+	char	*ret_buffer;
+	int		i;
 
-        i = 0;
-        // if no line return NULL
-        if (!buffer[i])
-                return (NULL);
-        // go to the eol
-        while (buffer[i] && buffer[i] != '\n')
-                i++;
-        // malloc to eol
-        line = ft_calloc(i + 2, sizeof(char));
-        i = 0;
-        // line = buffer
-        while (buffer[i] && buffer[i] != '\n')
-        {
-                line[i] = buffer[i];
-                i++;
-        }
-        // if eol is \0 or \n, replace eol by \n
-        if (buffer[i] && buffer[i] == '\n')
-                line[i++] = '\n';
-        return (line);
+	i = 0;
+	if (!buffer[i])
+		return (NULL);
+	while (buffer[i] && buffer[i] != '\n')
+		i++;
+	ret_buffer = ft_calloc(i + 2, sizeof(char));
+	i = 0;
+	while (buffer[i] && buffer[i] != '\n')
+	{
+		ret_buffer[i] = buffer[i];
+		i++;
+	}
+	if (buffer[i] && buffer[i] == '\n')
+		ret_buffer[i++] = '\n';
+	return (ret_buffer);
 }
 
-char    *reader(int fd, char *res)
+char	*readwithbuffer(int fd, char *buffer)
 {
-        char    *buffer;
-        int             byte_read;
+	char	*tmp_buffer;
+	ssize_t	bytereads;
 
-
-        if (!res)
-                res = ft_calloc(1, 1);
-        buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-        byte_read = 1;
-        while (byte_read > 0)
-        {
-                byte_read = read(fd, buffer, BUFFER_SIZE);
-                if (byte_read == -1)
-                {
-                        free(buffer);
-                        return (NULL);
-                }
-                buffer[byte_read] = 0;
-                res = join_free(res, buffer);
-                if (ft_strchr(buffer, '\n'))
-                        break ;
-        }
-        free(buffer);
-        return (res);
+	if (!buffer)
+		buffer = ft_calloc(1, 1);
+	tmp_buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	bytereads = 1;
+	while (bytereads > 0)
+	{
+		bytereads = read(fd, tmp_buffer, BUFFER_SIZE);
+		if (bytereads == -1)
+		{
+			free(tmp_buffer);
+			return (NULL);
+		}
+		tmp_buffer[bytereads] = 0;
+		buffer = join_free(buffer, tmp_buffer);
+		if (ft_strchr(tmp_buffer, '\n'))
+			break ;
+	}
+	free(tmp_buffer);
+	return (buffer);
 }
 
-char    *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-        static char     *buffer;
-        char            *line;
+	static char	*buffer;
+	char		*finale;
 
-        // error handling
-        if (fd < 0 || BUFFER_SIZE <= 0)
-                return (NULL);
-        buffer = reader(fd, buffer);
-        if (!buffer)
-                return (NULL);
-        line = ft_line(buffer);
-        buffer = ft_next(buffer);
-        return (line);
-}
-#include <stdio.h>
-int main()
-{
-        int fd = open("test", O_RDONLY);
-        char *f =  get_next_line(fd);
-        printf("%s",f);
-        free(f);
-        close(fd);
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	buffer = readwithbuffer(fd, buffer);
+	if (!buffer)
+		return (NULL);
+	finale = clean_ret(buffer);
+	buffer = get_ready(buffer);
+	return (finale);
 }
