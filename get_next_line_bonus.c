@@ -6,7 +6,7 @@
 /*   By: akajjou <akajjou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 07:04:07 by akajjou           #+#    #+#             */
-/*   Updated: 2023/12/31 08:30:23 by akajjou          ###   ########.fr       */
+/*   Updated: 2023/12/31 08:37:50 by akajjou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ char	*readwithbuffer(int fd, char *buffer)
 
 	if (!buffer)
 		buffer = ft_calloc(1, 1);
-	tmp_buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	tmp_buffer = ft_calloc((size_t)BUFFER_SIZE + 1, sizeof(char));
 	bytereads = 1;
 	while (bytereads > 0)
 	{
