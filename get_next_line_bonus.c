@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akajjou <akajjou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 07:04:07 by akajjou           #+#    #+#             */
-/*   Updated: 2023/12/31 08:28:12 by akajjou          ###   ########.fr       */
+/*   Updated: 2023/12/31 08:30:23 by akajjou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*join_free(char *buffer, char *buf)
 {
@@ -91,15 +91,15 @@ char	*readwithbuffer(int fd, char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
+	static char	*buffer[1024];
 	char		*finale;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buffer = readwithbuffer(fd, buffer);
-	if (!buffer)
+	buffer[fd] = readwithbuffer(fd, buffer[fd]);
+	if (!buffer[fd])
 		return (NULL);
-	finale = clean_ret(buffer);
-	buffer = get_ready(buffer);
+	finale = clean_ret(buffer[fd]);
+	buffer[fd] = get_ready(buffer[fd]);
 	return (finale);
 }
