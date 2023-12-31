@@ -6,7 +6,7 @@
 /*   By: akajjou <akajjou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 07:04:07 by akajjou           #+#    #+#             */
-/*   Updated: 2023/12/31 08:37:50 by akajjou          ###   ########.fr       */
+/*   Updated: 2023/12/31 11:55:57 by akajjou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,14 +73,14 @@ char	*readwithbuffer(int fd, char *buffer)
 
 	if (!buffer)
 		buffer = ft_calloc(1, 1);
-	tmp_buffer = ft_calloc((size_t)BUFFER_SIZE + 1, sizeof(char));
+	tmp_buffer = malloc((size_t)BUFFER_SIZE + 1);
 	bytereads = 1;
 	while (bytereads > 0)
 	{
-		bytereads = read(fd, tmp_buffer, BUFFER_SIZE);
+		bytereads = read(fd, tmp_buffer, (size_t)BUFFER_SIZE);
 		if (bytereads == -1)
 			return (free(buffer), free(tmp_buffer), NULL);
-		tmp_buffer[bytereads] = 0;
+		tmp_buffer[bytereads] = '\0';
 		buffer = join_free(buffer, tmp_buffer);
 		if (ft_strchr(tmp_buffer, '\n'))
 			break ;
@@ -94,7 +94,7 @@ char	*get_next_line(int fd)
 	static char	*buffer[1024];
 	char		*finale;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || (size_t)BUFFER_SIZE <= 0 || fd > 1024 )
 		return (NULL);
 	buffer[fd] = readwithbuffer(fd, buffer[fd]);
 	if (!buffer[fd])

@@ -6,7 +6,7 @@
 /*   By: akajjou <akajjou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 07:04:07 by akajjou           #+#    #+#             */
-/*   Updated: 2023/12/31 09:37:29 by akajjou          ###   ########.fr       */
+/*   Updated: 2023/12/31 09:41:51 by akajjou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,10 @@ char	*readwithbuffer(int fd, char *buffer)
 	bytereads = 1;
 	while (bytereads > 0)
 	{
-		bytereads = read(fd, tmp_buffer, BUFFER_SIZE);
+		bytereads = read(fd, tmp_buffer, (size_t)BUFFER_SIZE);
 		if (bytereads == -1)
 			return (free(buffer), free(tmp_buffer), NULL);
-		tmp_buffer[bytereads] = 0;
+		tmp_buffer[bytereads] = '\0';
 		buffer = join_free(buffer, tmp_buffer);
 		if (ft_strchr(tmp_buffer, '\n'))
 			break ;
@@ -94,7 +94,7 @@ char	*get_next_line(int fd)
 	static char	*buffer;
 	char		*finale;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || (size_t)BUFFER_SIZE <= 0)
 		return (NULL);
 	buffer = readwithbuffer(fd, buffer);
 	if (!buffer)

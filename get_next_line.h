@@ -6,13 +6,14 @@
 /*   By: akajjou <akajjou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 07:04:44 by akajjou           #+#    #+#             */
-/*   Updated: 2023/12/31 07:04:45 by akajjou          ###   ########.fr       */
+/*   Updated: 2023/12/31 09:32:37 by akajjou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 # include <fcntl.h>
+# include <limits.h>
 # include <stddef.h>
 # include <stdint.h>
 # include <stdio.h>
