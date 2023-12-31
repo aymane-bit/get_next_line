@@ -6,7 +6,7 @@
 /*   By: akajjou <akajjou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/31 07:04:07 by akajjou           #+#    #+#             */
-/*   Updated: 2023/12/31 11:55:57 by akajjou          ###   ########.fr       */
+/*   Updated: 2023/12/31 12:10:09 by akajjou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ char	*get_next_line(int fd)
 	static char	*buffer[1024];
 	char		*finale;
 
-	if (fd < 0 || (size_t)BUFFER_SIZE <= 0 || fd > 1024 )
+	if (fd < 0 || (size_t)BUFFER_SIZE <= 0 || fd > 1024)
 		return (NULL);
 	buffer[fd] = readwithbuffer(fd, buffer[fd]);
 	if (!buffer[fd])
